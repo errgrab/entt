@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 @dataclass(frozen=True)
 class Config:
     db_file: str = os.getenv("DB_FILE", "entt.db")
@@ -15,5 +16,5 @@ class Config:
     api_port: int = int(os.getenv("API_PORT", "8000"))
     command_prefix: str = os.getenv("ENTT_PREFIX", "!")
 
-config = Config()
 
+config = Config()

@@ -1,0 +1,6 @@
+dotenv==0.9.9
+peewee==4.2.6
+py-cord==2.8.1
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.2
+watchfiles==1.2.0
