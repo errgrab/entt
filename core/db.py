@@ -30,6 +30,7 @@ def bootstrap() -> None:
         "finance_channel_id": str(config.finance_channel_id or ""),
         "task_channel_id": str(config.task_channel_id or ""),
         "note_channel_id": str(config.note_channel_id or ""),
+        "default_method": str(config.default_method or "credit"),
     }
 
     for key, value in defaults.items():

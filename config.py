@@ -13,6 +13,7 @@ class Config:
     finance_channel_id: int | None = int(os.getenv("FINANCE_CHANNEL", "0"))
     note_channel_id: int | None = int(os.getenv("NOTE_CHANNEL", "0"))
     task_channel_id: int | None = int(os.getenv("TASK_CHANNEL", "0"))
+    default_method: str = os.getenv("DEFAULT_METHOD", "credit")
     api_host: str = os.getenv("API_HOST", "127.0.0.1")
     api_port: int = int(os.getenv("API_PORT", "8000"))
     command_prefix: str = os.getenv("ENTT_PREFIX", "!")
