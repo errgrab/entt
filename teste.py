@@ -1,7 +1,17 @@
-import os
 import datetime
+import os
+
 import discord
-from peewee import *
+from peewee import (
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKeyField,
+    IntegerField,
+    Model,
+    SqliteDatabase,
+    TextField,
+)
 
 # Discord
 intents = discord.Intents.default()
@@ -22,14 +32,13 @@ async def on_message(msg):
         return
     if msg.channel.id != finance_channel:
         return
-    if msg.content.startswith("!"):
-        if msg.content == "!ping":
-            await msg.channel.send("pong!")
-        pass # TODO parsing commands for configuration like adding tags and transaction types.
+    if msg.content.startswith("!") and msg.content == "!ping":
+        await msg.channel.send("pong!")
+    # TODO parsing commands for configuration like adding tags and transaction types.
 
 
 # peewee
-db_file = 'app.db'
+db_file = "app.db"
 db = SqliteDatabase(db_file)
 
 
@@ -62,8 +71,8 @@ class Transaction(Table):
     title = CharField()
     description = TextField(null=True)
     value_cents = IntegerField()
-    wallet = ForeignKeyField(Wallet, backref='transactions')
-    transaction_type = ForeignKeyField(TransactionType, backref='transactions')
+    wallet = ForeignKeyField(Wallet, backref="transactions")
+    transaction_type = ForeignKeyField(TransactionType, backref="transactions")
     timestamp = DateTimeField(default=datetime.datetime.now)
 
 
@@ -84,13 +93,13 @@ class Note(Table):
 
 
 class TransactionTag(Table):
-    transaction = ForeignKeyField(Transaction, backref='transaction_tags')
-    tag = ForeignKeyField(Tag, backref='transaction_tags')
+    transaction = ForeignKeyField(Transaction, backref="transaction_tags")
+    tag = ForeignKeyField(Tag, backref="transaction_tags")
 
 
 class NoteTag(Table):
-    note = ForeignKeyField(Note, backref='note_tags')
-    tag = ForeignKeyField(Tag, backref='note_tags')
+    note = ForeignKeyField(Note, backref="note_tags")
+    tag = ForeignKeyField(Tag, backref="note_tags")
 
 
 # peewee functions
@@ -107,10 +116,19 @@ def bootstrap():
         return
     print("[entt] Bootstraping...")
     with db:
-        db.create_tables([
-            Setting, Wallet, Tag, TransactionType, Transaction, Task, Note,
-            TransactionTag, NoteTag,
-        ])
+        db.create_tables(
+            [
+                Setting,
+                Wallet,
+                Tag,
+                TransactionType,
+                Transaction,
+                Task,
+                Note,
+                TransactionTag,
+                NoteTag,
+            ]
+        )
         print("[entt] Discord token necessary...")
         token = input("discord_token: ")
         Setting.create(key="discord_token", value=token)
@@ -122,6 +140,6 @@ def main():
     client.run(token)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     bootstrap()
     main()

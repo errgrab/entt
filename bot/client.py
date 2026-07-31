@@ -1,9 +1,11 @@
 import logging
+
 import discord
-from config import config
-from bot.commands import dispatch, CommandError
+
+from bot.commands import CommandError, dispatch
 from bot.parsers import PARSERS
-from db.database import get_channel_map, get_setting
+from config import config
+from db.services import get_channel_map
 
 logger = logging.getLogger("entt.bot")
 
@@ -22,6 +24,7 @@ async def _send_result(msg: discord.Message, source: str, content: str, handler)
         logger.exception("Unhandled error processing %s: %s", source, content)
         await msg.channel.send(f"⚠️ Something went wrong processing that {source}.")
 
+
 @client.event
 async def on_ready():
     logger.info("Discord bot logged in as %s", client.user)
@@ -35,7 +38,9 @@ async def on_message(msg: discord.Message):
     content = msg.content.strip()
 
     if content.startswith(config.command_prefix):
-        await _send_result(msg, "command", content, lambda raw: dispatch(raw, config.command_prefix))
+        await _send_result(
+            msg, "command", content, lambda raw: dispatch(raw, config.command_prefix)
+        )
         return
 
     channel_type = get_channel_map().get(msg.channel.id)
@@ -49,8 +54,9 @@ async def on_message(msg: discord.Message):
 
     await _send_result(msg, f"{channel_type} message", content, parser)
 
+
 async def start_bot():
-    token = get_setting("discord_token")
+    token = config.discord_token
     if not token:
         raise RuntimeError(
             "DISCORD_TOKEN is not set. Add it to your .env file or environment."

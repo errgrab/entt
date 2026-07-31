@@ -1,8 +1,15 @@
 import datetime
+
 from peewee import (
-    Model, CharField, TextField, IntegerField, ForeignKeyField, 
-    DateTimeField, BooleanField
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKeyField,
+    IntegerField,
+    Model,
+    TextField,
 )
+
 from db.database import db
 
 
@@ -17,7 +24,9 @@ class Setting(BaseModel):
 
 
 class Wallet(BaseModel):
+    id = IntegerField(primary_key=True)
     name = CharField(unique=True)
+    balance_cents = IntegerField()
 
 
 class Tag(BaseModel):
@@ -29,6 +38,7 @@ class TransactionType(BaseModel):
 
 
 class Transaction(BaseModel):
+    id = IntegerField(primary_key=True)
     title = CharField()
     description = TextField(null=True)
     value_cents = IntegerField()
@@ -38,6 +48,7 @@ class Transaction(BaseModel):
 
 
 class Task(BaseModel):
+    id = IntegerField(primary_key=True)
     title = CharField()
     description = TextField(null=True)
     completed = BooleanField(default=False)
@@ -47,6 +58,7 @@ class Task(BaseModel):
 
 
 class Note(BaseModel):
+    id = IntegerField(primary_key=True)
     title = CharField()
     content = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
