@@ -7,7 +7,7 @@ class ParsedTransaction:
     name: str
     value_cents: int
     method: str | None = None
-    tags: list[str] = field(default_factory=list)
+    tags: set[str] = field(default_factory=set)
     desc: str | None = None
 
     @property
@@ -41,14 +41,14 @@ def parse_transaction_input(text: str) -> ParsedTransaction:
         raise ValueError(f"Invalid monetary value: '{raw_value}'")
 
     method: str | None = None
-    tags: list[str] = []
+    tags: set[str] = set()
     desc_words: list[str] = []
 
     for token in tokens[1:]:
         if token.startswith("$") and len(token) > 1:
             method = token[1:].strip().lower()
         elif token.startswith("#") and len(token) > 1:
-            tags.append(token[1:].strip().lower())
+            tags.add(token[1:].strip().lower())
         else:
             desc_words.append(token)
 
