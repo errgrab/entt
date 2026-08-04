@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 class ParsedTransaction:
     name: str
     value_cents: int
-    method: str | None = None
+    method: str
     tags: set[str] = field(default_factory=set)
     desc: str | None = None
 
@@ -40,7 +40,7 @@ def parse_transaction_input(text: str) -> ParsedTransaction:
     except (InvalidOperation, ValueError):
         raise ValueError(f"Invalid monetary value: '{raw_value}'")
 
-    method: str | None = None
+    method: str = "money"
     tags: set[str] = set()
     desc_words: list[str] = []
 

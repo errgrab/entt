@@ -5,7 +5,7 @@ import discord
 from bot.commands import CommandError, dispatch
 from bot.parsers import PARSERS
 from config import config
-from db.services import get_channel_map
+from core.services import SettingService
 
 logger = logging.getLogger("entt.bot")
 
@@ -14,7 +14,24 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 
-async def _send_result(msg: discord.Message, source: str, content: str, handler):
+def get_channel_map() -> dict[int, str]:
+    channels = ["finance", "note", "task"]
+    channel_map: dict[int, str] = {}
+
+    for key in channels:
+        val_str = SettingService.get(f"{key}_channel_id")
+        try:
+            channel_id = int(val_str)
+            if channel_id == 0:
+                channel_map[channel_id] = key
+        except (ValueError, TypeError):
+            continue
+    return channel_map
+
+
+async def _send_result(
+    msg: discord.Message, source: str, content: str, handler
+) -> None:
     try:
         reply = await handler(content)
         await msg.channel.send(reply)
@@ -26,12 +43,12 @@ async def _send_result(msg: discord.Message, source: str, content: str, handler)
 
 
 @client.event
-async def on_ready():
+async def on_ready() -> None:
     logger.info("Discord bot logged in as %s", client.user)
 
 
 @client.event
-async def on_message(msg: discord.Message):
+async def on_message(msg: discord.Message) -> None:
     if msg.author == client.user:
         return
 
@@ -55,7 +72,7 @@ async def on_message(msg: discord.Message):
     await _send_result(msg, f"{channel_type} message", content, parser)
 
 
-async def start_bot():
+async def start_bot() -> None:
     token = config.discord_token
     if not token:
         raise RuntimeError(
