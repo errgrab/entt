@@ -22,7 +22,7 @@ def get_channel_map() -> dict[int, str]:
         val_str = SettingService.get(f"{key}_channel_id")
         try:
             channel_id = int(val_str)
-            if channel_id == 0:
+            if channel_id != 0:
                 channel_map[channel_id] = key
         except (ValueError, TypeError):
             continue
@@ -60,7 +60,8 @@ async def on_message(msg: discord.Message) -> None:
         )
         return
 
-    channel_type = get_channel_map().get(msg.channel.id)
+    channel_map = get_channel_map()
+    channel_type = channel_map.get(msg.channel.id)
     if channel_type is None:
         return
 

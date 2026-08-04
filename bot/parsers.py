@@ -9,7 +9,7 @@ async def parse_finance(content: str) -> str:
     TransactionService.create(
         wallet=default_wallet,
         name=parsed_tx.name,
-        value_cents=parsed_tx.value_cents,
+        value_cents=abs(parsed_tx.value_cents),
         tx_type="outcome" if parsed_tx.value_cents < 0 else "income",
         method=parsed_tx.method,
         tags=parsed_tx.tags,
