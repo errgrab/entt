@@ -1,7 +1,7 @@
 # Entt
 
-This is a WIP.
+This is a WIP Discord data management system.
 
-entt is a data management system in discord, you set specific chats and when you
-send a message with a specific syntax there, the system will parse it and save it
-later you will be able to query and study the data you created by using the system.
+The bot records message and voice activity metrics for configured servers.
+It also provides the foundation for groups, events, participation, reports,
+and role-based permissions.
